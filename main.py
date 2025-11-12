@@ -10,35 +10,47 @@ import re
 from io import BytesIO
 import requests
 from PIL import Image
+import remove_group as rmv
+from reading_base import *
 #------------------------------------------------------------------------------------------------------- VALUES
 TELEGRAM_BOT_TOKEN = "5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g" #5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
 genai.configure(api_key="AIzaSyA6aGXWJ9mFK2WxO_45gJ7JCvBIAgaEI6A")#oktabrovumrbek2023@gmail.com
 model = genai.GenerativeModel("gemini-2.5-flash-lite")
-#------------------------------------------------------------------------------------------------------- SPECIAL FUNCTIONS
-def data1():
-    with open('data.txt', 'r', encoding="utf-8", errors="ignore") as f: return eval(f.read())
-def data2(data):
-    with open('data.txt', 'w', encoding="utf-8", errors="ignore") as f: f.write(data)
-def base1():
-    with open('base.txt', 'r', encoding="utf-8", errors="ignore") as f: return eval(f.read())
-def base2(data):
-    with open('base.txt', 'w', encoding="utf-8", errors="ignore") as f: f.write(data)
-def tsk1():
-    with open('tasks.txt', 'r', encoding="utf-8", errors="ignore") as f: return eval(f.read())
-def tsk2(data):
-    with open('tasks.txt', 'w', encoding="utf-8", errors="ignore") as f: f.write(data)
 #------------------------------------------------------------------------------------------------------- ERROR
 def xato(t, o, tb, n, ID):
     s = f"ID: {ID}\nFunksiya nomi: {n}\nXatolik turi: "+str(t)+'\n'
     s += "Xatolik obyekti: "+str(o)+'\n'
     s += "Xatolikning qator raqami: "+str(tb)+'\n'
     bot.send_message(5736677391, s)
+#------------------------------------------------------------------------------------------------------- SPECIAL
+@bot.message_handler(commands = ['special'])
+def special(msg):
+    if msg.chat.id == 5736677391: bot.send_message(5736677391, """/remove_group - remove a group fully
+/stat - statistika
+/test - get an example congrats message
+/ads - reklama
+/rerun - qayta ishga tushirish
+/count - hamma ishlayotgan tasklar soni
+/get_info - get info of a user""")
+    else: bot.send_message(msg.chat.id, "You are not an admin of this bot") 
+#------------------------------------------------------------------------------------------------------- REMOVE A GROUP
+@bot.message_handler(commands = ['remove_group'])
+def remove_grou(msg):
+    if msg.chat.id == 5736677391:
+       bot.send_message(msg.chat.id, "Send IDs with a space in a row")
+       bot.register_next_step_handler(msg, remove_grou1)
+def remove_grou1(msg):
+    lst = list(msg.text.split())
+    data, tsks = rmv.remove_info(lst)
+    data2(str(data))
+    tsk2(str(tsks))
+    bot.send_message(msg.chat.id, "Successfully removed")
 #------------------------------------------------------------------------------------------------------- STATISTICS
 @bot.message_handler(commands = ['stat'])
 def stats(msg):
  try:
-    with open('base.txt', 'r', encoding="utf-8", errors="ignore") as f: base = eval(f.read())
+    base = base1()
     g = 0; a = 0
     for i in base:
         if str(i)[0] == '-':
@@ -53,10 +65,10 @@ def stats(msg):
 @bot.message_handler(commands = ['start'])
 def start(msg):
  try:
-    with open('base.txt', 'r', encoding="utf-8", errors="ignore") as f: data = eval(f.read())
+    data = base1()
     if not msg.chat.id in data:
         data.append(msg.chat.id)
-        with open('base.txt', 'w', encoding="utf-8", errors="ignore") as f: f.write(str(data))
+        base2(str(data))
         bot.send_message(msg.chat.id, "I appreciate that you are using me :)\nI will send \"congratulations🎉\" at a fixed time each year. To do this, send me the dates by pressing -> /add\nHave a good day, bye!")
  except:
     t, o, tb = sys.exc_info()
@@ -471,12 +483,12 @@ def echo_message(msg):
  try:
     if msg.chat.type == "private":
         if msg.reply_to_message:
-            a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!" + " Answer in maximum 4000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
-        else: a = msg.text+" Answer in maximum 3000 characters and do not format the text and do use code-based writing"
+            a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!" + " Answer in maximum 3000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
+        else: a = msg.text+" Answer in maximum 2500 characters and do not format the text and do use code-based writing"
         response = model.generate_content(a)
         bot.reply_to(msg, str(response.text))
     elif msg.chat.type in ['group', 'supergroup'] and msg.reply_to_message and msg.reply_to_message.from_user.id == bot.get_me().id:
-        a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!"+" Answer in maximum 4000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
+        a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!"+" Answer in maximum 3000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
         response = model.generate_content(msg.text)
         bot.send_message(msg.chat.id, str(response.text))
  except:

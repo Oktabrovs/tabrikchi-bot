@@ -2,3 +2,5 @@ telebot
 google-generativeai
 randfacts
 schedule
+requests
+Pillow
