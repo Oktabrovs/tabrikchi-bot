@@ -117,7 +117,7 @@ def how_many_days_left1(msg):
         bot.send_message(msg.chat.id, "Incorrect format!\n\nTo exit -> /exit")
         bot.register_next_step_handler(msg, how_many_days_left1)
         return 0
-    future_time = datetime.now() + timedelta(hours=2)
+    future_time = datetime.now() + timedelta(hours=4)
     delta = future_time - input_date
     total_days = delta.days
     if total_days == 0: days = 0
@@ -277,7 +277,7 @@ def add_date(msg):
         s = ds + '.' + ms
         d = int(d); m = int(m)
         today = datetime.now()
-        today = today + timedelta(hours=2)
+        today = today + timedelta(hours=4)
         y1 = today.year
         i_d =  datetime(y1, m, d)
         if today.month > m: y = y1 + 1
@@ -498,7 +498,7 @@ def echo_message(msg):
 def send_scheduled_message(m, d, y):
  try:
     today = datetime.now()
-    today = today + timedelta(hours=2)
+    today = today + timedelta(hours=4)
     data = data1()
     if today.month == int(m) and today.day == int(d) and today.year == int(y):
         dt = str(d).zfill(2)+'.'+str(m).zfill(2)+'.'+str(y).zfill(4)
@@ -561,7 +561,7 @@ try:
     run_it_shum()
     today = datetime.now()
     bot.send_message(5736677391, str(today))
-    today = today + timedelta(hours=2)
+    today = today + timedelta(hours=4)
     bot.send_message(5736677391, str(today))
     bot.infinity_polling()
 except:
