@@ -12,6 +12,7 @@ import requests
 from PIL import Image
 import remove_group as rmv
 from reading_base import *
+from large_text import *
 #------------------------------------------------------------------------------------------------------- VALUES
 TELEGRAM_BOT_TOKEN = "5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g" #5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
@@ -146,7 +147,9 @@ def tst1(msg):
 3. Give some wishes to a group of classmates within 100 words with emojis not anything else.
 DETERMINE WHICH RULE YOU HAVE TO FOLLOW ACCORDING TO {a}."""
     response = model.generate_content(prompt)
-    bot.send_message(msg.chat.id, a+'\n'+str(response.text))
+    txt = a+'\n'+str(response.text)
+    for i in split_message(txt):
+        bot.send_message(msg.chat.id, i)
  except:
     t, o, tb = sys.exc_info()
     xato(t, o, tb.tb_lineno, "tst1", msg.chat.id)
@@ -242,7 +245,8 @@ def imgtotxt2(msg):
         image = Image.open(image_data)
         p = msg.caption if msg.caption else "Extract all text from this image"
         a = model2.generate_content([image, p]).text
-        bot.send_message(msg.chat.id, a)
+        for i in split_message(a):
+            bot.send_message(msg.chat.id, i)
     else:
         bot.send_message(msg.chat.id, "Rasm yuboring!")
  except:
@@ -452,7 +456,9 @@ def asks_2(msg):
         a = "This is a response: " + msg.text + ". Here is an additional info: " + msg.reply_to_message.text + ". Use the additional info"
     else: a = msg.text
     response = model.generate_content(a)
-    bot.reply_to(msg, str(response.text))
+    txt = str(response.text)
+    for i in split_message(txt):
+        bot.send_message(msg.chat.id, i)
  except:
     t, o, tb = sys.exc_info()
     xato(t, o, tb.tb_lineno, "asks_2", msg.chat.id)
@@ -486,11 +492,15 @@ def echo_message(msg):
             a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!" + " Answer in maximum 3000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
         else: a = msg.text+" Answer in maximum 2500 characters and do not format the text and do use code-based writing"
         response = model.generate_content(a)
-        bot.reply_to(msg, str(response.text))
+        txt = str(response.text)
+        for i in split_message(txt):
+            bot.send_message(msg.chat.id, i)
     elif msg.chat.type in ['group', 'supergroup'] and msg.reply_to_message and msg.reply_to_message.from_user.id == bot.get_me().id:
         a = f"This is a prompt: {msg.text}. Here is an additional info if you need: {msg.reply_to_message.text}. Use the additional info if the prompt asks or needs it!"+" Answer in maximum 3000 characters and do not use formating characters if the text already has formatting characters remove them and do use code-based writing"
         response = model.generate_content(msg.text)
-        bot.send_message(msg.chat.id, str(response.text))
+        txt = str(response.text)
+        for i in split_message(txt):
+            bot.send_message(msg.chat.id, i)
  except:
     t, o, tb = sys.exc_info()
     xato(t, o, tb.tb_lineno, "echo_message", msg.chat.id)
@@ -515,7 +525,9 @@ def send_scheduled_message(m, d, y):
 3. Give some wishes to a group of classmates within 100 words with emojis not anything else.
 DETERMINE WHICH RULE YOU HAVE TO FOLLOW ACCORDING TO {a}."""
                 response = model.generate_content(prompt)
-                bot.send_message(ID, a+'\n'+str(response.text))
+                txt = a+'\n'+str(response.text)
+                for i in split_message(txt):
+                    bot.send_message(ID, i)
         y = int(y) + 1
         dt = str(d).zfill(2)+'.'+str(m).zfill(2)+'.'+str(y).zfill(4)
         if dt in data:
