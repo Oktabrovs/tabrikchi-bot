@@ -14,9 +14,9 @@ import remove_group as rmv
 from reading_base import *
 from large_text import *
 #------------------------------------------------------------------------------------------------------- VALUES
-TELEGRAM_BOT_TOKEN = "5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g" #5890470756:AAGDFzpvGNZrVAZb8Q3U0m5MDhiM32U2u2g
+TELEGRAM_BOT_TOKEN = "" # Your Token
 bot = telebot.TeleBot(TELEGRAM_BOT_TOKEN)
-genai.configure(api_key="AIzaSyA6aGXWJ9mFK2WxO_45gJ7JCvBIAgaEI6A")#oktabrovumrbek2023@gmail.com
+genai.configure(api_key="")# Your Token
 model = genai.GenerativeModel("gemini-2.5-flash-lite")
 #------------------------------------------------------------------------------------------------------- ERROR
 def xato(t, o, tb, n, ID):
